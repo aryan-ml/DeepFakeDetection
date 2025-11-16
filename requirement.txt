@@ -1,10 +1,12 @@
 # Core Deep Learning 
 torch               ## ResNet, CNN
 torchvision
+tensorflow
 
 # Computer Vision
 facenet-pytorch     ## Read, process and extract frames from videos
 opencv-python       ## Detect and crop faces (MTCNN)
+mtcnn
 
 
 # Data Handling
@@ -21,3 +23,4 @@ streamlit
 
 # Download 
 yt-dlp
+
