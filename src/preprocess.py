@@ -26,8 +26,7 @@ detector = MTCNN()                          ## Initalizing MTCNN (Multi-task con
 
 
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)   ## creates dirs if not already created 
-os.makedirs(CSV_PATH, exist_ok=True)        
+os.makedirs(OUTPUT_DIR, exist_ok=True)   ## creates dirs if not already created       
 
 data_rows = []                               ## List to store CSV rows
 
@@ -51,7 +50,7 @@ def extract_faces_from_video(video_path, label):
 
 
         if frame_count % FRAME_INTERVAL == 0:                           ## Only take faces from every 5th frame
-            rgb = cv2.cvtColor(frame, cv2.color_BGR2RGB)                ## OpenCV uses BGR and MTCNN uses RGB hence conversion is important
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)                ## OpenCV uses BGR and MTCNN uses RGB hence conversion is important
 
 
             faces = detector.detect_faces(rgb)                          ## Face detection model
