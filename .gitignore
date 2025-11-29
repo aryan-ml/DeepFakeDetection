@@ -1,8 +1,5 @@
 # Ignore large data & generated files
 data/
-*.mp4
-*.jpg
-*.png
 *.avi
 *.zip
 *.tar.gz
