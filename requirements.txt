@@ -17,6 +17,7 @@ scikit-learn        ## Metrics (accuracy, precision, recall, etc)
 
 # Visualization
 matplotlib
+seaborn
 
 # Webapp
 streamlit
