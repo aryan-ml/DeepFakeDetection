@@ -4,7 +4,7 @@ data/
 *.zip
 *.tar.gz
 *.pth
-
+*.h5
 # Ignore Python cache
 __pycache__/
 *.pyc
