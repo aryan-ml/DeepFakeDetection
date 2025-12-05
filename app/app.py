@@ -21,8 +21,14 @@ tf.keras.backend.clear_session()
 # 2. LOAD MODEL + THRESHOLD
 ###########################################
 
-MODEL_PATH = "final_resnet_savedmodel.keras"     # change if path is different
-CONFIG_PATH = "config.json"
+import os
+
+# Get the folder where THIS script (app.py) is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Build the correct paths relative to that folder
+MODEL_PATH = os.path.join(current_dir, "final_resnet_savedmodel.keras")
+CONFIG_PATH = os.path.join(current_dir, "config.json")
 
 st.title("🔍 DeepFake Video Detector (ResNet50 Model)")
 
