@@ -30,7 +30,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(current_dir, "final_resnet_savedmodel.keras")
 CONFIG_PATH = os.path.join(current_dir, "config.json")
 
-st.title("🔍 DeepFake Video Detector (ResNet50 Model)")
+st.title("DeepFake Video Detector (ResNet50 Model)")
 st.markdown('**Developed by: Aryan**')
 st.caption("Helps you spot FAKE people... digitally, at least :)")
 
