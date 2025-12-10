@@ -123,7 +123,7 @@ def analyze_video(video_path):
 
 st.title("DeepFake Video Detector (ResNet50 Model)")
 st.markdown('**Developed by: Aryan**')
-st.caption("Helps you spot FAKE people... digitally, at least :)")
+st.markdown("Helps you spot FAKE people... digitally, at least :)")
 
 uploaded_video = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
 
@@ -164,7 +164,7 @@ if uploaded_video:
         cols = st.columns(5)
         for idx, (img, score) in enumerate(zip(face_images, frame_scores)):
             with cols[idx % 5]:
-                st.image(img, use_column_width=True)
+                st.image(img, use_container_width=True)
                 if score > THRESHOLD:
                     st.caption(f"🚨 **{score*100:.0f}% FAKE**")
                 else:
