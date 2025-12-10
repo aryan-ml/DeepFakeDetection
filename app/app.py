@@ -8,15 +8,15 @@ import json
 import os
 import pandas as pd
 
-###########################################
-# 1. PAGE CONFIG
-###########################################
-st.set_page_config(
-    page_title="DeepFake Detector AI",
-    page_icon="🕵️‍♂️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# ###########################################
+# # 1. PAGE CONFIG
+# ###########################################
+# st.set_page_config(
+#     page_title="DeepFake Detector AI",
+#     page_icon="🕵️‍♂️",
+#     layout="wide",
+#     initial_sidebar_state="expanded"
+# )
 
 ###########################################
 # 2. MODEL & CONFIG LOADING
@@ -28,22 +28,42 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(current_dir, "final_resnet_savedmodel.keras")
 CONFIG_PATH = os.path.join(current_dir, "config.json")
 
+st.title("DeepFake Video Detector (ResNet50 Model)")
+st.markdown('**Developed by: Aryan**')
+st.caption("Helps you spot FAKE people... digitally, at least :)")
+
 @st.cache_resource
-def load_model():
-    return tf.keras.models.load_model(MODEL_PATH, compile=False)
+def load_model_and_config():
+    # 1. Load Model
+    try:
+        model = tf.keras.models.load_model(MODEL_PATH, compile=False)
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None, None
 
-model = load_model()
+    # 2. Load Config
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            cfg = json.load(f)
+        threshold = float(cfg["threshold"])
+    except Exception as e:
+        st.error(f"Error loading config: {e}")
+        return model, 0.5 # Default threshold if fails
 
-with open(CONFIG_PATH, "r") as f:
-    cfg = json.load(f)
-THRESHOLD = float(cfg["threshold"])
+    return model, threshold
+
+# Call the function once
+model, THRESHOLD = load_model_and_config()
+
+if model is not None:
+    st.success("Model loaded successfully!")
 
 ###########################################
 # 3. ADVANCED FACE EXTRACTION
 ###########################################
 detector = MTCNN()
 IMG_SIZE = 224
-MAX_FRAMES = 50  # Limit to 50 frames to prevent memory crash
+MAX_FRAMES = 60  # Limit to 50 frames to prevent memory crash
 
 def extract_and_predict(video_path):
     cap = cv2.VideoCapture(video_path)
@@ -116,10 +136,9 @@ def extract_and_predict(video_path):
 ###########################################
 
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/11590/11590673.png", width=80)
     st.title("DeepFake Detector")
     st.info("This tool extracts faces frame-by-frame and analyzes them for manipulation artifacts.")
-    uploaded_video = st.file_uploader("📂 Upload Video", type=["mp4", "mov", "avi"])
+    uploaded_video = st.file_uploader("Upload Video", type=["mp4", "mov", "avi"])
 
 st.markdown("<h2 style='text-align: center;'>🕵️‍♂️ DeepFake Analysis Dashboard</h2>", unsafe_allow_html=True)
 
@@ -130,11 +149,11 @@ if uploaded_video:
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.subheader("📺 Original Video")
+        st.subheader("Uploaded Video")
         st.video(tfile.name)
         
     with col2:
-        with st.spinner("🔍 Scanning video for faces..."):
+        with st.spinner("Scanning video for faces..."):
             label, prob, per_frame_scores, face_images = extract_and_predict(tfile.name)
             
         if label:
