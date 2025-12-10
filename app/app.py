@@ -118,7 +118,7 @@ def extract_and_predict(video_path):
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/11590/11590673.png", width=80)
     st.title("DeepFake Detector")
-    st.info("Now with **Frame-by-Frame** X-Ray analysis.")
+    st.info("This tool extracts faces frame-by-frame and analyzes them for manipulation artifacts.")
     uploaded_video = st.file_uploader("📂 Upload Video", type=["mp4", "mov", "avi"])
 
 st.markdown("<h2 style='text-align: center;'>🕵️‍♂️ DeepFake Analysis Dashboard</h2>", unsafe_allow_html=True)
@@ -134,81 +134,43 @@ if uploaded_video:
         st.video(tfile.name)
         
     with col2:
-        with st.spinner("extracting faces & analyzing frames..."):
+        with st.spinner("🔍 Scanning video for faces..."):
             label, prob, per_frame_scores, face_images = extract_and_predict(tfile.name)
             
         if label:
             # Result Card
             if label == "FAKE":
-                st.error(f"### 🚨 FINAL VERDICT: **FAKE**")
-                st.metric("Fake Confidence", f"{prob*100:.2f}%")
+                st.error(f"### 🚨 VERDICT: **FAKE**")
+                st.metric("Confidence", f"{prob*100:.2f}%", delta="High Risk", delta_color="inverse")
             else:
-                st.success(f"### ✅ FINAL VERDICT: **REAL**")
-                st.metric("Real Confidence", f"{(1-prob)*100:.2f}%")
+                st.success(f"### ✅ VERDICT: **REAL**")
+                st.metric("Confidence", f"{(1-prob)*100:.2f}%", delta="Safe", delta_color="normal")
         else:
-            st.warning("No faces found.")
-
+            st.warning("No faces detected in the video.")
+            
     # ---------------------------------------------------------
-    # NEW SECTION: EXPLAINABLE AI (Frame Analysis)
+    # NEW SECTION: GRID DISPLAY (No HTML)
     # ---------------------------------------------------------
-    if label:
+    if label and len(face_images) > 0:
         st.divider()
-        st.subheader("🧠 What did the AI see?")
-        st.write("The model cropped faces from the video and scored each one individually.")
+        st.subheader(f"📸 Analyzed Faces ({len(face_images)} Frames Extracted)")
         
-        # 1. Line Chart of Scores
-        st.markdown("#### 📈 Frame-by-Frame Suspicion Level")
-        chart_data = pd.DataFrame(per_frame_scores, columns=["Fake Probability"])
-        st.line_chart(chart_data)
-        st.caption("Peaks in the graph indicate specific moments where the AI detected manipulation.")
+        # Line Chart of Scores
+        st.caption("Suspicion level per frame over time:")
+        st.line_chart(per_frame_scores)
 
-        # 2. Face Gallery
-        st.markdown("#### 📸 Analyzed Frames")
-        st.write("Below are the exact crops the AI analyzed. **Red** = Suspicious, **Green** = Clean.")
+        st.write("### 🖼️ Frame-by-Frame Breakdown")
         
-        # CSS to create a scrolling row of images
-        st.markdown("""
-        <style>
-        .scroll-container {
-            display: flex;
-            overflow-x: auto;
-            padding: 10px;
-            gap: 10px;
-        }
-        .face-card {
-            min-width: 120px;
-            text-align: center;
-            background: #f0f2f6;
-            padding: 5px;
-            border-radius: 8px;
-        }
-        .fake-border { border: 3px solid #ff4b4b; }
-        .real-border { border: 3px solid #09ab3b; }
-        </style>
-        """, unsafe_allow_html=True)
-
-        # Build HTML for the gallery manually to allow custom styling
-        html_content = '<div class="scroll-container">'
+        # Display images in a grid of 5 columns
+        cols = st.columns(5)
         
-        # Show up to 10 key frames (to avoid overcrowding)
-        # We zip the images with their scores
-        for img, score in zip(face_images[:15], per_frame_scores[:15]):
-            
-            # Encode image to base64 for HTML display
-            _, buffer = cv2.imencode('.jpg', cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
-            import base64
-            img_str = base64.b64encode(buffer).decode()
-            
-            # Color logic
-            border_class = "fake-border" if score > THRESHOLD else "real-border"
-            score_text = f"{score*100:.0f}% Fake"
-            
-            html_content += f"""
-            <div class="face-card {border_class}">
-                <img src="data:image/jpeg;base64,{img_str}" width="100" style="border-radius:5px;">
-                <p style="font-size:12px; margin:5px 0;"><b>{score_text}</b></p>
-            </div>
-            """
-        
-        html_content += '</div>'
-        st.markdown(html_content, unsafe_allow_html=True)
+        for idx, (img, score) in enumerate(zip(face_images, per_frame_scores)):
+            with cols[idx % 5]:
+                # Display the image
+                st.image(img, use_column_width=True)
+                
+                # Display the score below it
+                if score > THRESHOLD:
+                    st.error(f"**{score*100:.0f}% FAKE**")
+                else:
+                    st.success(f"**REAL**")
