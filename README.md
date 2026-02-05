@@ -65,3 +65,17 @@ Models Used
 - Adam optimizer
 
 ---
+
+## Results 
+### Frame and Video level Accuracy
+![Project Demo](outputs/A2.png) 
+
+---
+
+### ROC AUC
+![Project Demo](outputs/A3.png)
+
+---
+
+### Model Evaluation
+![Project Demo](outputs/A4.png)
