@@ -3,7 +3,7 @@ Classical ML + Fine-Tuned ResNet50 | Video-Level Inference | Streamlit Deploymen
 
 ---
 
-## Live Demo
+## Try Model Here
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://deepfake-video-detection.streamlit.app/)
 
@@ -79,3 +79,16 @@ Models Used
 
 ### Model Evaluation
 ![Project Demo](outputs/A4.png)
+
+---
+## Deployment
+- GPU used for training, **CPU only inference**
+- Upload video → get real/fake verdict
+
+## Limitations
+- Single manipulation type (**DeepFakes**)
+- Face detector can fail in extreme cases
+
+## Official Report
+[Detailed Report](INT_395_Report_Aryan.pdf)
+
