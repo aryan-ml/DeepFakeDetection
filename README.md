@@ -30,6 +30,9 @@ The framework combines large-scale face-level preprocessing, classical machine l
 - **Threshold tuning**
 - **Live on** Stream lit 
 
+## Faces
+![Project Demo](outputs/eda/sample_grid.png)
+
 ## Tech Stack
 - **Language:** Python
 - **DL Framework:** TensorFlow
@@ -38,14 +41,8 @@ The framework combines large-scale face-level preprocessing, classical machine l
 - **Deployment:** Streamlit Cloud
 
 ## Pipeline
-- Video
-- Frame Extraction (**Every 5Th Frame**)
-- Face Detection & Alignment (**MTCNN**)
-- **224 x 224** Face Images
-- ResNet50 / Classical ML
-- Frame Predictions
-- Video-Level Aggregation
-- Final Verdict
+![Project Demo](outputs/A1.png)
+
 
 Models Used
 ---
